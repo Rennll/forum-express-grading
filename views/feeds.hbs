@@ -34,8 +34,7 @@
         {{#each comments}}
           <div>
             <h4>
-              <a class="link-primary"
-                href="/restaurants/{{this.Restaurant.id}}">{{this.Restaurant.name}}</a>
+              <a class="link-primary" href="/restaurants/{{this.Restaurant.id}}">{{this.Restaurant.name}}</a>
             </h4>
             <p class="my-4" style="white-space: break-spaces;">{{this.text}}</p>
             - <a class="link-secondary" href="/users/{{this.User.id}}">{{this.User.name}}</a>

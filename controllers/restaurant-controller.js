@@ -93,14 +93,19 @@ const restaurantController = {
   },
   getDashboard: (req, res, next) => {
     return Restaurant.findByPk(req.params.id, {
-      raw: true,
-      nest: true,
-      include: Category
+      include: [
+        Category,
+        { model: Comment },
+        { model: User, as: 'FavoritedUsers' }
+      ]
     })
       .then(restaurant => {
         if (!restaurant) throw new Error("Restaurant didn't exist!") //  如果找不到，回傳錯誤訊息，後面不執行
+        const result = restaurant.toJSON()
+        result.commentCount = result.Comments?.length
+        result.favoritedCount = result.FavoritedUsers?.length
 
-        return res.render('dashboard', { restaurant })
+        return res.render('dashboard', { restaurant: result })
       })
       .catch(err => next(err))
   },
