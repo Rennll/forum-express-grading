@@ -5,7 +5,7 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
 
-const routes = require('./routes')
+const { pages } = require('./routes')
 const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
 const handlebarsHelpers = require('./helpers/handlebars-helpers')
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   res.locals.user = getUser(req) // 加這行
   next()
 })
-app.use(routes)
+app.use(pages)
 
 app.listen(port, () => {
   console.info(`Example app listening on port ${port}!`)
