@@ -12,25 +12,12 @@ const adminController = {
       .catch(err => next(err))
   },
   postRestaurant: (req, res, next) => {
-    const { name, tel, address, openingHours, description, categoryId } = req.body // 從 req.body 拿出表單裡的資料
-    if (!name) throw new Error('Restaurant name is required!') // name 是必填，若發先是空值就會終止程式碼，並在畫面顯示錯誤提示
-    const { file } = req
+    adminServices.postRestaurant(req, (err, data) => {
+      if (err) return next(err)
 
-    imgurFileHelper(file)
-      .then(filePath => Restaurant.create({ // 產生一個新的 Restaurant 物件實例，並存入資料庫
-        name,
-        tel,
-        address,
-        openingHours,
-        description,
-        image: filePath || null,
-        categoryId
-      }))
-      .then(() => {
-        req.flash('success_messages', 'restaurant was successfully created') // 在畫面顯示成功提示
-        res.redirect('/admin/restaurants') // 新增完成後導回後台首頁
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', 'restaurant was successfully created') // 在畫面顯示成功提示
+      res.redirect('/admin/restaurants') // 新增完成後導回後台首頁
+    })
   },
   getRestaurant: (req, res, next) => {
     Restaurant.findByPk(req.params.id, {
@@ -84,7 +71,12 @@ const adminController = {
       .catch(err => next(err))
   },
   deleteRestaurant: (req, res, next) => {
-    adminServices.deleteRestaurant(req, (err, data) => err ? next(err) : res.redirect('/admin/restaurants', data))
+    adminServices.deleteRestaurant(req, (err, data) => {
+      if (err) return next(err)
+
+      req.flash('success_messages', 'restaurant was successfully to delete.')
+      res.redirect('/admin/restaurants')
+    })
   },
 
   getUsers: (req, res, next) => {
