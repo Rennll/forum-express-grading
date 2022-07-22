@@ -13,7 +13,7 @@
 </ul>
 
 
-<div class="row mt-3">
+<div class="row mt-3" id="restaurant-panel">
   {{#each restaurants}}
     <div class="col-md-4">
       <div class="card mb-4 shadow-sm">
@@ -48,6 +48,9 @@
                 <button type="submit" class="btn btn-outline-primary m-1">Like</button>
               </form>
             {{/if}}
+            <!-- Button trigger modal -->
+            <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#restaurant"
+              href="/api/restaurants/{{this.id}}">Modal Test</a>
           </div>
         </div>
       </div>
@@ -78,3 +81,45 @@
     </li>
   </ul>
 </nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="restaurant" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- https://github.com/axios/axios --}}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+  const modal = document.querySelector(".modal-content")
+  const panel = document.querySelector("#restaurant-panel")
+
+  panel.addEventListener("click", event => {
+    console.log(event.target)
+    axios.get(event.target.href)
+      .then(function (response) {
+        // handle success
+        console.log(response);
+        modal.firstElementChild.firstElementChild.innerText = response.data.restaurant.name
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+  })
+</script>
